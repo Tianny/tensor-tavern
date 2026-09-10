@@ -1,0 +1,61 @@
+2024-01-15 09:00:01.234 INFO  [main] Application starting...
+2024-01-15 09:00:01.567 INFO  [main] Loading configuration from /etc/app/config.yaml
+2024-01-15 09:00:02.123 INFO  [main] Configuration loaded successfully
+2024-01-15 09:00:02.456 INFO  [db] Initializing database connection pool
+2024-01-15 09:00:02.789 INFO  [db] Connection pool created with 10 connections
+2024-01-15 09:00:03.012 INFO  [cache] Initializing Redis cache
+2024-01-15 09:00:03.345 INFO  [cache] Redis connection established
+2024-01-15 09:00:03.678 INFO  [http] Starting HTTP server on port 8080
+2024-01-15 09:00:03.901 INFO  [http] HTTP server started successfully
+2024-01-15 09:00:04.234 INFO  [main] Application started in 3.0s
+2024-01-15 09:01:15.123 INFO  [api] Processing request: GET /api/users
+2024-01-15 09:01:15.456 INFO  [db] Executing query: SELECT * FROM users LIMIT 100
+2024-01-15 09:01:15.789 INFO  [api] Request completed in 666ms
+2024-01-15 09:02:30.012 WARN  [db] Slow query detected: 1523ms for SELECT * FROM orders WHERE...
+2024-01-15 09:02:30.345 INFO  [api] Processing request: GET /api/orders
+2024-01-15 09:02:31.867 WARN  [db] Connection pool running low: 2/10 available
+2024-01-15 09:03:00.123 ERROR [db] Database connection timeout after 5000ms
+2024-01-15 09:03:00.456 ERROR [api] Failed to process request: Connection timeout
+2024-01-15 09:03:00.789 INFO  [db] Attempting to reconnect...
+2024-01-15 09:03:01.234 INFO  [db] Reconnection successful
+2024-01-15 09:05:15.567 INFO  [auth] User login: user_123
+2024-01-15 09:05:15.890 INFO  [auth] Token generated for user_123
+2024-01-15 09:06:30.123 WARN  [auth] Failed login attempt for user: admin
+2024-01-15 09:06:30.456 WARN  [auth] Failed login attempt for user: admin
+2024-01-15 09:06:30.789 WARN  [auth] Failed login attempt for user: admin
+2024-01-15 09:06:31.012 ERROR [auth] Too many failed attempts, account locked: admin
+2024-01-15 09:07:45.345 INFO  [api] Processing request: POST /api/orders
+2024-01-15 09:07:45.678 INFO  [db] Beginning transaction
+2024-01-15 09:07:45.901 INFO  [db] Executing: INSERT INTO orders...
+2024-01-15 09:07:46.234 INFO  [db] Executing: UPDATE inventory...
+2024-01-15 09:07:46.567 ERROR [db] Deadlock detected, rolling back transaction
+2024-01-15 09:07:46.890 ERROR [api] Order creation failed: Deadlock
+2024-01-15 09:10:00.123 INFO  [scheduler] Running scheduled job: cleanup_expired_sessions
+2024-01-15 09:10:00.456 INFO  [scheduler] Deleted 1523 expired sessions
+2024-01-15 09:15:30.789 WARN  [cache] Cache miss rate high: 45%
+2024-01-15 09:15:31.012 INFO  [cache] Preloading frequently accessed data
+2024-01-15 09:20:00.345 INFO  [health] Health check passed
+2024-01-15 09:25:00.678 INFO  [health] Health check passed
+2024-01-15 09:30:00.901 WARN  [health] Memory usage high: 85%
+2024-01-15 09:30:01.234 INFO  [gc] Triggering garbage collection
+2024-01-15 09:30:02.567 INFO  [gc] GC completed, freed 512MB
+2024-01-15 09:35:15.890 ERROR [api] Unhandled exception in /api/products
+2024-01-15 09:35:15.891 ERROR [api] TypeError: Cannot read property 'price' of undefined
+2024-01-15 09:35:15.892 ERROR [api]     at ProductService.calculateTotal (/app/services/product.js:45)
+2024-01-15 09:35:15.893 ERROR [api]     at async Router.handleRequest (/app/router.js:123)
+2024-01-15 09:40:00.123 INFO  [health] Health check passed
+2024-01-15 09:45:00.456 INFO  [health] Health check passed
+2024-01-15 09:50:30.789 WARN  [db] Slow query detected: 2341ms for SELECT COUNT(*) FROM...
+2024-01-15 09:55:00.012 INFO  [api] Processing request: GET /api/reports/daily
+2024-01-15 09:55:05.345 WARN  [api] Request took longer than expected: 5333ms
+2024-01-15 10:00:00.678 INFO  [scheduler] Running scheduled job: generate_daily_report
+2024-01-15 10:00:15.901 ERROR [email] Failed to send email: SMTP connection refused
+2024-01-15 10:00:16.234 ERROR [scheduler] Daily report job failed: Email service unavailable
+2024-01-15 10:05:00.567 INFO  [health] Health check passed
+2024-01-15 10:10:30.890 ERROR [api] Rate limit exceeded for IP: 192.168.1.100
+2024-01-15 10:10:31.123 ERROR [api] Rate limit exceeded for IP: 192.168.1.100
+2024-01-15 10:10:31.456 ERROR [api] Rate limit exceeded for IP: 192.168.1.100
+2024-01-15 10:15:00.789 INFO  [api] Processing request: DELETE /api/users/456
+2024-01-15 10:15:00.890 WARN  [audit] Sensitive operation: User deletion by admin_user
+2024-01-15 10:15:01.012 INFO  [db] Soft delete: UPDATE users SET deleted_at = NOW() WHERE id = 456
+2024-01-15 10:15:01.345 INFO  [api] User 456 deleted successfully

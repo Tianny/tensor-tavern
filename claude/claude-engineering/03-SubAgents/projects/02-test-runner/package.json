@@ -1,0 +1,11 @@
+{
+  "name": "test-runner-demo",
+  "version": "1.0.0",
+  "description": "演示测试运行器子代理",
+  "main": "src/calculator.js",
+  "scripts": {
+    "test": "node src/calculator.test.js"
+  },
+  "keywords": ["demo", "subagent", "test-runner"],
+  "license": "MIT"
+}

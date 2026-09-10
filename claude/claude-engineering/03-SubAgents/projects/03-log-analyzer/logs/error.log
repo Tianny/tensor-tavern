@@ -1,0 +1,98 @@
+2024-01-15 09:03:00.123 ERROR [db] Database connection timeout after 5000ms
+  Connection: mysql://app_user@db-primary:3306/production
+  Query: SELECT * FROM orders WHERE user_id = 123 AND status = 'pending'
+  Waited: 5000ms
+  Pool status: 0/10 available
+
+2024-01-15 09:06:31.012 ERROR [auth] Too many failed attempts, account locked: admin
+  IP: 203.0.113.50
+  Attempts: 5
+  Window: 60s
+  Action: Account locked for 15 minutes
+
+2024-01-15 09:07:46.567 ERROR [db] Deadlock detected, rolling back transaction
+  Transaction ID: txn_789
+  Tables involved: orders, inventory
+  Query 1: INSERT INTO orders (user_id, total) VALUES (123, 99.99)
+  Query 2: UPDATE inventory SET quantity = quantity - 1 WHERE product_id = 456
+  Deadlock graph: orders -> inventory -> orders
+
+2024-01-15 09:35:15.890 ERROR [api] Unhandled exception in /api/products
+  Request ID: req_abc123
+  Method: GET
+  Path: /api/products/999
+  User: user_456
+
+TypeError: Cannot read property 'price' of undefined
+    at ProductService.calculateTotal (/app/services/product.js:45)
+    at ProductController.getProduct (/app/controllers/product.js:23)
+    at async Router.handleRequest (/app/router.js:123)
+    at async Server.processRequest (/app/server.js:89)
+
+2024-01-15 10:00:15.901 ERROR [email] Failed to send email: SMTP connection refused
+  To: admin@example.com
+  Subject: Daily Report - 2024-01-15
+  SMTP Server: smtp.example.com:587
+  Error: ECONNREFUSED
+  Retry: 1/3
+
+2024-01-15 10:00:16.234 ERROR [scheduler] Daily report job failed: Email service unavailable
+  Job: generate_daily_report
+  Scheduled: 10:00:00
+  Started: 10:00:00.678
+  Failed: 10:00:16.234
+  Duration: 15.556s
+  Error: Unable to send report email after 3 retries
+
+2024-01-15 10:10:30.890 ERROR [api] Rate limit exceeded for IP: 192.168.1.100
+  Endpoint: /api/search
+  Limit: 100 requests/minute
+  Current: 156 requests/minute
+  Action: Request blocked
+
+2024-01-15 10:10:31.123 ERROR [api] Rate limit exceeded for IP: 192.168.1.100
+  Endpoint: /api/search
+  Limit: 100 requests/minute
+  Current: 157 requests/minute
+  Action: Request blocked
+
+2024-01-15 10:10:31.456 ERROR [api] Rate limit exceeded for IP: 192.168.1.100
+  Endpoint: /api/search
+  Limit: 100 requests/minute
+  Current: 158 requests/minute
+  Action: Request blocked
+
+2024-01-15 10:25:00.789 ERROR [db] Database connection timeout after 5000ms
+  Connection: mysql://app_user@db-primary:3306/production
+  Query: SELECT * FROM products WHERE category = 'electronics'
+  Waited: 5000ms
+  Pool status: 0/10 available
+
+2024-01-15 10:25:01.012 ERROR [db] Database connection timeout after 5000ms
+  Connection: mysql://app_user@db-primary:3306/production
+  Query: SELECT COUNT(*) FROM orders WHERE date = '2024-01-15'
+  Waited: 5000ms
+  Pool status: 0/10 available
+
+2024-01-15 10:30:45.345 ERROR [api] Unhandled exception in /api/checkout
+  Request ID: req_def456
+  Method: POST
+  Path: /api/checkout
+  User: user_789
+
+Error: Insufficient inventory for product 123
+    at InventoryService.reserve (/app/services/inventory.js:78)
+    at CheckoutController.process (/app/controllers/checkout.js:45)
+    at async Router.handleRequest (/app/router.js:123)
+
+2024-01-15 10:45:30.678 ERROR [cache] Redis connection lost
+  Server: redis-primary:6379
+  Error: ECONNRESET
+  Last successful ping: 10:45:25.123
+  Reconnecting...
+
+2024-01-15 10:45:35.901 ERROR [cache] Redis reconnection failed
+  Server: redis-primary:6379
+  Attempt: 1/5
+  Error: ECONNREFUSED
+  Next retry in: 5s

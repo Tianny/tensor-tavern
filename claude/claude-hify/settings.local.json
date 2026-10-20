@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(mvn -pl hify-app -am test -Dtest='RequestLogInterceptorTest,JsonLogLayoutTest,TracingLogTest' -Dsurefire.failIfNoSpecifiedTests=false)"
-    ]
-  }
-}

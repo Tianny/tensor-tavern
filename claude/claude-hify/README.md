@@ -255,8 +255,6 @@ LLM API 调用三个特点：慢（一次对话 3-30 秒）、不稳定（随�
 2. stop.sh
 3. Makefile
 
-### 最终验收
-
 ## 后端业务基础设施
 
 ### 业务代码先跑起来
@@ -289,3 +287,73 @@ LLM API 调用三个特点：慢（一次对话 3-30 秒）、不稳定（随�
 3. 页面整体布局
 
 ### 前端基础组件
+
+创建前端公共组件。Vue 3 Composition API + TypeScript + Element Plus
+
+# 核心功能-基础篇
+
+## 模型提供商管理
+
+咨询模式想清楚（供应商选型、数据模型、设计决策）→ 按层拆解（Entity → DTO → Service → Controller）→ 逐步执行验证 → 前端对接 → 完整验收。
+
+## Agent 创建与配置
+
+### Agent 定义
+
+![Agent 定义](./assets/agent定义.png)
+
+### Agent 表结构
+
+![Agent 表结构](./assets/agent表结构.png)
+
+### Agent CRUD
+
+![Agent CRUD](./assets/agent-CRUD.png)
+
+## 对话引擎
+
+### 对话引擎链路
+
+![对话引擎链路](./assets/对话引擎链路.png)
+
+### SSE 流式响应
+
+![对话引擎 SSE 流式响应](./assets/SSE流式响应.png)
+
+### 上下文记忆
+
+![上下文记忆](./assets/上下文记忆.png)
+
+### 对话存储选型
+
+![对话存储选型](./assets/对话存储选型.png)
+
+### 对话存储协作流程
+
+![对话存储协作流程](./assets/对话存储协作流程.png)
+
+### 流式对话前端设计
+
+![流式对话前端设计](./assets/流式对话前端设计.png)
+
+# 核心功能-高级功能
+
+## RAG 知识库
+
+### 检索对话链路
+
+![检索对话链路](./assets/检索对话链路.png)
+
+### RAG 数据模型
+
+![RAG 数据模型](./assets/RAG数据模型.png)
+
+## 工作流编排
+
+### 工作流编排链路
+
+![工作流编排链路](./assets/工作流编排链路.png)
+
+### 执行引擎
+
+![执行引擎](./assets/执行引擎.png)

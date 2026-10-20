@@ -1,0 +1,14 @@
+# 构建上下文只需 Maven 源码与前端源码，排除无关内容加速构建
+.git
+.run
+data
+docs
+**/target
+hify-web/node_modules
+hify-web/dist
+Makefile
+start.sh
+stop.sh
+deploy/.env
+*.log
+.DS_Store

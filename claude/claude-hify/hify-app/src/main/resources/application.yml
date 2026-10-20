@@ -1,0 +1,131 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: hify
+
+  # MySQL：本地开发默认值，部署时用环境变量覆盖（K8s 里注入）
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:hify}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+    hikari:
+      connection-timeout: 5000
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+  # Redis：本地开发默认值
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      # 空值 = 无密码（本地开发）；部署环境用 REDIS_PASSWORD 注入
+      password: ${REDIS_PASSWORD:}
+      timeout: 5s
+
+  # 文档上传（知识库）：本地开发默认 10MB，与 hify.knowledge.max-file-size 业务校验配合
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
+
+hify:
+  executor:
+    llm:
+      core-pool-size: 10
+      max-pool-size: 50
+      queue-capacity: 100
+    async:
+      core-pool-size: 5
+      max-pool-size: 20
+      queue-capacity: 200
+  cache:
+    key-prefix: "hify:"
+    default-ttl: 30m
+    provider-cache-ttl: 30m
+    agent-cache-ttl: 30m
+    session-cache-ttl: 2h
+  http:
+    llm:
+      connect-timeout: 5s     # 建连超时（RestTemplate / OkHttp 一致）
+      read-timeout: 60s       # 普通请求读超时（等完整响应的上限）
+      stream-read-timeout: 120s  # 流式请求相邻 chunk 间隔超时（不是总时长）
+    probe:
+      connect-timeout: 5s     # 连通性测试建连超时
+      read-timeout: 10s       # 连通性测试读超时（快速反馈，不重试）
+    mcp:
+      connect-timeout: 5s     # MCP 工具服务建连超时
+      read-timeout: 30s       # MCP 单次 JSON-RPC 请求读超时（含 initialize 握手与 tools/call）
+  resilience:
+    retry:
+      timeout-retries: 2        # 网络超时重试次数
+      timeout-interval: 1s      # 超时重试固定间隔
+      rate-limit-retries: 2     # 限流重试次数
+      rate-limit-base-delay: 2s # 限流退避基数（2s、4s 指数退避）
+  chat:
+    sse-timeout: 5m             # 单条回复的 SSE 总时长上限（chunk 间隔超时看 hify.http.llm.stream-read-timeout）
+    context-ttl: 2h             # Redis 对话上下文 TTL（session:{id}）
+    context-max-history: 50     # 上下文最多保留的轮次（user+assistant 消息数）
+    context-default-tokens: 32768  # 模型未配 maxContextTokens 时的上下文 token 预算
+    tool-max-rounds: 5             # function calling 最大 LLM 轮数（最后一轮强制收尾作答）
+  pgvector:
+    url: jdbc:postgresql://${PGVECTOR_HOST:localhost}:${PGVECTOR_PORT:5432}/${PGVECTOR_DATABASE:hify}
+    username: ${PGVECTOR_USERNAME:postgres}
+    password: ${PGVECTOR_PASSWORD:postgres}
+    connection-timeout: 5000    # 建连超时
+    maximum-pool-size: 4        # 向量读写是轻量本地操作，小池即可
+  knowledge:
+    upload-dir: ${HIFY_KNOWLEDGE_UPLOAD_DIR:./data/knowledge}   # 原始文件落盘目录（重刷向量时需要原文；容器部署挂卷到 /app/data/knowledge）
+    max-file-size: 5242880         # 单文件上限（字节），当前 5MB
+    chunk-size-tokens: 400         # 分块目标大小（token 估算值）
+    chunk-overlap-tokens: 60       # 相邻块重叠（token 估算值），防答案被切断在块边界
+    embedding-batch-size: 10       # 一次 embedding 请求携带的文本条数（服务商限制）
+    retrieval-top-k: 4             # 检索召回条数
+    retrieval-min-score: 0.30      # 相似度阈值（余弦），低于丢弃
+  workflow:
+    max-steps: 50                  # 单次运行最大节点执行步数（防条件分支成环死循环）
+    trace-max-chars: 2000          # 运行轨迹中单节点 input/output 的截断长度
+  log:
+    slow-request-threshold: 1s   # 慢请求告警阈值（SSE 异步请求不告警）
+
+# Resilience4j 熔断（程序化使用：CircuitBreakerService 按 providerName 懒创建实例）
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        # 默认值 100 大于窗口 10，不显式调小熔断器永远不会评估失败率
+        minimumNumberOfCalls: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+        permittedNumberOfCallsInHalfOpenState: 3
+        # 客户端主动断开不是 Provider 故障，不计入熔断失败率
+        ignoreExceptions:
+          - com.hify.chat.exception.StreamAbortedException
+
+mybatis-plus:
+  # 各模块 mapper XML（目前还没有，占位生效即可）
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.hify.**.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    banner: false
+    # 逻辑删除已由 hify-common 的 MybatisPlusConfig GlobalConfig bean 统一配置
+    # （自定义 bean 存在时本段 db-config 不生效，避免两处维护）
+
+# Actuator：只暴露健康检查与 Prometheus 抓取端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    distribution:
+      # 延迟分布走直方图（Prometheus _bucket 序列，可配告警与分位数查询）
+      percentiles-histogram:
+        hify.chat.request.duration: true
+        hify.llm.call.duration: true

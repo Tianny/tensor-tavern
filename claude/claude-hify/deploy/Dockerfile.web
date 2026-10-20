@@ -1,0 +1,14 @@
+# 前端镜像：多阶段构建（Node 构建层产出 dist → Nginx 托管静态文件并反代 /api）
+# 构建上下文 = 仓库根目录（docker-compose.yml 里已指定）
+
+FROM node:20-alpine AS build
+WORKDIR /build
+COPY hify-web/package.json hify-web/package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY hify-web/ .
+RUN npm run build
+
+FROM nginx:1.27-alpine
+COPY --from=build /build/dist /usr/share/nginx/html
+COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80

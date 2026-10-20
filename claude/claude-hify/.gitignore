@@ -1,0 +1,22 @@
+# Maven
+target/
+
+# 前端
+hify-web/node_modules/
+hify-web/dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# 日志与临时文件
+*.log
+.DS_Store
+/tmp/
+
+# 本地上传的知识库文档（运行时数据，不入库）
+data/knowledge/
+
+# 部署密钥（deploy/.env 含各组件密码，绝不入库）
+deploy/.env

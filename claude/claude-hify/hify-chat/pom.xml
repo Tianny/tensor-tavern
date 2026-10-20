@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.hify</groupId>
+        <artifactId>hify</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>hify-chat</artifactId>
+    <name>hify-chat</name>
+    <description>对话引擎：流式响应（SSE）、多轮对话、上下文管理（Redis）</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.hify</groupId>
+            <artifactId>hify-common</artifactId>
+        </dependency>
+        <!-- 对话时读取 Agent 配置 -->
+        <dependency>
+            <groupId>com.hify</groupId>
+            <artifactId>hify-agent</artifactId>
+        </dependency>
+        <!-- 对话时读取模型配置 -->
+        <dependency>
+            <groupId>com.hify</groupId>
+            <artifactId>hify-provider</artifactId>
+        </dependency>
+        <!-- 对话可能触发工作流 -->
+        <dependency>
+            <groupId>com.hify</groupId>
+            <artifactId>hify-workflow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hify</groupId>
+            <artifactId>hify-mcp</artifactId>
+        </dependency>
+        <!-- 对话可能走 RAG 检索 -->
+        <dependency>
+            <groupId>com.hify</groupId>
+            <artifactId>hify-knowledge</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- MyBatis-Plus + MySQL（对话消息持久化） -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- 对话上下文缓存：session:{sessionId}，TTL 2h -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- LLM 调用熔断 -->
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-spring-boot3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

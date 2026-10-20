@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  统一日志配置：
+  - 非 prod（含未设 profile 的本地/测试）：控制台彩色输出
+  - prod：JSON 行式输出到 stdout，由 K8s / 容器日志采集
+  激活 prod：SPRING_PROFILES_ACTIVE=prod
+  traceId 由 TracingFilter（OpenTelemetry）写入 MDC，此处 %X{traceId} / JsonLogLayout 输出
+-->
+<configuration>
+
+    <!-- 开发环境：控制台彩色 -->
+    <springProfile name="!prod">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>%d{HH:mm:ss} %boldCyan([%thread]) %magenta([%X{traceId}]) %highlight(%-5level) %cyan(%logger{20}) - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- 生产环境：JSON 行式 stdout（字段：timestamp/level/traceId/thread/logger/message[/stack]） -->
+    <springProfile name="prod">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+                <charset>UTF-8</charset>
+                <layout class="com.hify.common.log.JsonLogLayout"/>
+            </encoder>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+</configuration>

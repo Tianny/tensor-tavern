@@ -1,0 +1,13 @@
+# 后端镜像：多阶段构建（Maven 构建层 → JRE 运行层）
+# 构建上下文 = 仓库根目录（docker-compose.yml 里已指定）
+
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /build
+COPY . .
+RUN mvn -q -pl hify-app -am -DskipTests package
+
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /build/hify-app/target/hify-app-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

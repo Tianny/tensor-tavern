@@ -1,3 +1,0 @@
-0000000000000000000000000000000000000000 cc9af70adfd07a43c5732e6ce41fb9fd05884fa6 Tianny <tian.xie@gmail.com> 1792404616 +0800	commit (initial): 初始提交：Hify v0.0.1 全量代码
-cc9af70adfd07a43c5732e6ce41fb9fd05884fa6 8f3ef1b6a3b37561cce77b961b65d21d56805d24 Tianny <tian.xie@gmail.com> 1792406109 +0800	commit: 部署配置：Docker Compose 单机一键部署
-8f3ef1b6a3b37561cce77b961b65d21d56805d24 7a4233dc8006092e16fed38613a98934cf60ec00 Tianny <tian.xie@gmail.com> 1792412869 +0800	commit: 可观测性：结构化 JSON 日志 + OTel traceId 链路 + Prometheus 指标
